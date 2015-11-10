@@ -23,11 +23,29 @@
 
 - name: Check if Chrome is installed
   command: dpkg-query -l google-chrome-beta
-  register: deb_check
+  register: chrome_is_installed
+  failed_when: chrome_is_installed.rc > 1
+  changed_when: no
 
 - name: Install Chrome beta
   apt: name=google-chrome-beta update_cache=yes
-  when: deb_check.stdout.find('no packages found') != -1
+  when: chrome_is_installed.rc == 0
+
+- name: Install Opera signing key
+  shell: wget -q -O - http://deb.opera.com/archive.key | apt-key add -
+
+- name: Add Opera source
+  apt_repository: repo="deb http://deb.opera.com/opera/ stable non-free" state=present
+
+- name: Check if Opera is installed
+  command: dpkg-query -l opera
+  register: opera_is_installed
+  failed_when: opera_is_installed.rc > 1
+  changed_when: no
+
+- name: Install Opera
+  apt: name=opera update_cache=yes
+  when: opera_is_installed.rc == 0
 
 - name: Make certs directory
   file: path=/home/{{ user }}/certs state=directory owner={{ user }} group={{ user }}
