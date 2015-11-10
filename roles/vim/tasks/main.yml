@@ -1,0 +1,11 @@
+---
+- name: Install vim
+  apt: name={{ item }}
+  with_items:
+    - curl
+    - vim
+    - git
+    - exuberant-ctags
+- name: Symlink Vim configuration
+  file: src="{{ code_dir }}/dotfiles/vimrc" dest=/home/{{ user }}/.vimrc state=link
+

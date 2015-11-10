@@ -1,0 +1,10 @@
+---
+- name: Deploy gitconfig
+  file: src="{{ code_dir }}/dotfiles/gitconfig" dest=/home/{{ user }}/.gitconfig state=link
+- name: Deploy Ack settings
+  file: src="{{ code_dir }}/dotfiles/ackrc" dest=/home/{{ user }}/.ackrc state=link
+- name: Deploy gitignore
+  file: src="{{ code_dir }}/dotfiles/.gitignore" dest=/home/{{ user }}/.gitignore state=link
+- name: Deploy pylintrc
+  file: src="{{ code_dir }}/dotfiles/pylintrc" dest=/home/{{ user }}/.pylintrc state=link
+

@@ -1,0 +1,6 @@
+---
+- name: Deploy Xmodmap
+  file: src="{{ code_dir }}/dotfiles/Xmodmap" dest=/home/{{ user }}/.Xmodmap state=link
+
+- name: Apply TrackPoint settings
+  copy: src=rc.local dest=/etc/rc.local
