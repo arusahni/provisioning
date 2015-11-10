@@ -2,6 +2,9 @@
 - name: Apply TrackPoint responsiveness settings
   copy: src=rc.local dest=/etc/rc.local
 
+- name: Apply TrackPoint button emulation settings
+  copy: src=.xsessionrc dest=/home/{{ user }}/.xsessionrc owner={{ user }} group={{ user }}
+
 - name: Make WiFi WiFast
   lineinfile:
     dest: /etc/modprobe.d/iwlwifi-opt.conf
