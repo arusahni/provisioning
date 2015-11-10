@@ -4,3 +4,10 @@
 
 - name: Apply TrackPoint settings
   copy: src=rc.local dest=/etc/rc.local
+
+- name: Make WiFi WiFast
+  lineinfile:
+    dest: /etc/modprobe.d/iwlwifi-opt.conf
+    regexp: ^options iwlfifi
+    line: options iwlwifi 11n_disable=1 power_save=0 swcrypto=1
+    create: yes

@@ -5,15 +5,29 @@
     - yakuake
     - choqok
     - zsh
+
 - name: Deploy zshrc
   file: src="{{ code_dir }}/dotfiles/zshrc" dest=/home/{{ user }}/.zshrc state=link
+
 - name: Set zshell
   user: name=aru shell=/usr/bin/zsh
+
 - name: Deploy .dircolors
   file: src="{{ code_dir }}/dotfiles/dircolors" dest=/home/{{ user }}/.dircolors state=link
+
 - name: Install Google signing key
   shell: wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+
 - name: Add Chrome source
   apt_repository: repo="deb http://dl.google.com/linux/chrome/deb/ stable main" state=present
+
+- name: Check if Chrome is installed
+  command: dpkg-query -l google-chrome-beta
+  register: deb_check
+
 - name: Install Chrome beta
   apt: name=google-chrome-beta update_cache=yes
+  when: deb_check.stdout.find('no packages found') != -1
+
+- name: Make certs directory
+  file: path=/home/{{ user }}/certs state=directory owner={{ user }} group={{ user }}
