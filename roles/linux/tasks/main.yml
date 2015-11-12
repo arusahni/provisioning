@@ -5,6 +5,9 @@
     - yakuake
     - choqok
     - zsh
+    - tlp
+    - smartmontools
+    - ethtool
 
 - name: Deploy zshrc
   file: src="{{ code_dir }}/dotfiles/zshrc" dest=/home/{{ user }}/.zshrc state=link
@@ -29,7 +32,7 @@
 
 - name: Install Chrome beta
   apt: name=google-chrome-beta update_cache=yes
-  when: chrome_is_installed.rc == 0
+  when: chrome_is_installed.rc != 0
 
 - name: Install Opera signing key
   shell: wget -q -O - http://deb.opera.com/archive.key | apt-key add -
@@ -45,7 +48,68 @@
 
 - name: Install Opera
   apt: name=opera update_cache=yes
-  when: opera_is_installed.rc == 0
+  when: opera_is_installed.rc != 0
 
 - name: Make certs directory
   file: path=/home/{{ user }}/certs state=directory owner={{ user }} group={{ user }}
+
+- name: Install fonts
+  apt: name={{ item }}
+  with_items:
+  - fonts-dejavu
+  - fonts-dejavu-core
+  - fonts-dejavu-extra
+  - fonts-droid
+  - fonts-font-awesome
+  - fonts-freefont-ttf
+  - fonts-guru
+  - fonts-guru-extra
+  - fonts-horai-umefont
+  - fonts-kacst
+  - fonts-kacst-one
+  - fonts-khmeros-core
+  - fonts-lao
+  - fonts-liberation
+  - fonts-lklug-sinhala
+  - fonts-lmodern
+  - fonts-lohit-guru
+  - fonts-lyx
+  - fonts-mathjax
+  - fonts-nanum
+  - fonts-opensymbol
+  - fonts-oxygen
+  - fonts-roboto
+  - fonts-sil-abyssinica
+  - fonts-sil-padauk
+  - fonts-takao-pgothic
+  - fonts-thai-tlwg
+  - fonts-tibetan-machine
+  - fonts-tlwg-garuda
+  - fonts-tlwg-kinnari
+  - fonts-tlwg-laksaman
+  - fonts-tlwg-loma
+  - fonts-tlwg-mono
+  - fonts-tlwg-norasi
+  - fonts-tlwg-purisa
+  - fonts-tlwg-sawasdee
+  - fonts-tlwg-typewriter
+  - fonts-tlwg-typist
+  - fonts-tlwg-typo
+  - fonts-tlwg-umpush
+  - fonts-tlwg-waree
+  - fonts-unfonts-core
+  - fonts-wqy-microhei
+  - ttf-ancient-fonts
+  - ttf-ancient-fonts-symbola
+  - ttf-bitstream-vera
+  - ttf-dejavu
+  - ttf-dejavu-core
+  - ttf-dejavu-extra
+  - ttf-indic-fonts-core
+  - ttf-liberation
+  - ttf-mscorefonts-installer
+  - ttf-oxygen-font-family
+  - ttf-ubuntu-font-family
+  - ttf-unfonts-core
+  - ttf-wqy-microhei
+  - ttf-xfree86-nonfree
