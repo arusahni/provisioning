@@ -6,6 +6,12 @@
     - vim
     - git
     - exuberant-ctags
+
 - name: Symlink Vim configuration
   file: src="{{ code_dir }}/dotfiles/vimrc" dest=/home/{{ user }}/.vimrc state=link
 
+- name: Install Powerline fonts
+  command: ./powerline-setup.sh
+  become_user: "{{ user }}"
+  args:
+    chdir: "{{ code_dir }}/dotfiles"
