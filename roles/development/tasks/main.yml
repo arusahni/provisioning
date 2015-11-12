@@ -1,15 +1,23 @@
 ---
 - name: Deploy gitconfig
   file: src="{{ code_dir }}/dotfiles/gitconfig" dest=/home/{{ user }}/.gitconfig state=link
+  tags:
+  - any
 
 - name: Deploy Ack settings
   file: src="{{ code_dir }}/dotfiles/ackrc" dest=/home/{{ user }}/.ackrc state=link
+  tags:
+  - any
 
 - name: Deploy gitignore
   file: src="{{ code_dir }}/dotfiles/.gitignore" dest=/home/{{ user }}/.gitignore state=link
+  tags:
+  - any
 
 - name: Deploy pylintrc
   file: src="{{ code_dir }}/dotfiles/pylintrc" dest=/home/{{ user }}/.pylintrc state=link
+  tags:
+  - python
 
 - name: Install base Python packages
   apt: pkg={{ item }}
@@ -19,15 +27,37 @@
   - python-pip
   - python3-pip
   - python3-dev
+  tags:
+  - python
 
 - name: Add Ubuntu Make repo
   apt_repository: repo="ppa:ubuntu-desktop/ubuntu-make"
+  tags:
+  - android
 
 - name: Install Ubuntu Make
   apt: pkg=ubuntu-developer-tools-center
+  tags:
+  - android
 
-- name: Make Android studio location
+- name: Make Android Studio location
   file: path=/opt/android-studio state=directory owner={{ user }}
+  tags:
+  - android
 
-- name: Install android studio
-  command: umake android --accept-license android-studio /opt/android-studio
+- name: Install Android Studio
+  command: umake android --accept-license android-studio /opt/android-studio creates=/opt/android-studio/bin/studio.sh
+  tags:
+  - android
+
+- name: Install Node stuff
+  apt: pkg={{ item }}
+  with_items:
+  - nodejs
+  - nodejs-legacy
+  - nodejs-dev
+  - npm
+  tags:
+  - javascript
+  - webdev
+
