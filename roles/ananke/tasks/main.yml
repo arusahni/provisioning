@@ -11,3 +11,22 @@
     regexp: ^options iwlfifi
     line: options iwlwifi 11n_disable=1 power_save=0 swcrypto=1
     create: yes
+
+- name: Create Windows mount
+  file: path=/mnt/windows state=directory owner={{ user }}
+
+- name: Add Windows mount to the fstab
+  lineinfile:
+    dest: /etc/fstab
+    regexp: ^UUID=607202BF72029A44
+    line: UUID=607202BF72029A44       /mnt/windows            ntfs-3g defaults,windows_names,locale_en_US.utf8,rw,user,auto,fmask=0177,dmask=0077,uid=1000,discard,noatime,nofail    0   0
+  register: fstab_updated
+
+- name: Verify mounts
+  command: mount -a
+
+- name: Install ThinkPad-related packages
+  apt: pkg={{ item }}
+  with_items:
+  - tp-smapi-dkms
+  - acpi-call-dkms
