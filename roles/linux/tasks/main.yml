@@ -8,6 +8,21 @@
     - tlp
     - smartmontools
     - ethtool
+    - htop
+    - ncdu
+    - audacity
+    - elinks
+    - gimp
+    - imagemagick
+    - kubuntu-restricted-extras
+    - kubuntu-restricted-addons
+    - lame
+    - libjpeg-dev
+    - libjpeg8-dev
+    - libpng12-dev
+    - unrar
+    - unzip
+    - vlc-nox
 
 - name: Deploy zshrc
   file: src="{{ code_dir }}/dotfiles/zshrc" dest=/home/{{ user }}/.zshrc state=link
