@@ -3,7 +3,7 @@
   apt: name={{ item }}
   with_items:
     - curl
-    - vim
+    - vim-gtk
     - git
     - exuberant-ctags
 
@@ -11,7 +11,7 @@
   file: src="{{ code_dir }}/dotfiles/vimrc" dest=/home/{{ user }}/.vimrc state=link
 
 - name: Install Powerline fonts
-  command: ./powerline-setup.sh
+  command: ./powerline-setup.sh creates=/home/{{ user }}/.config/fontconfig/conf.d/10-powerline-symbols.conf
   become_user: "{{ user }}"
   args:
     chdir: "{{ code_dir }}/dotfiles"
