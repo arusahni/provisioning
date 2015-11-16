@@ -61,3 +61,12 @@
   - javascript
   - webdev
 
+- name: Install global Node packages
+  npm: name={{ item }} global=yes
+  with_items:
+  - bower
+  - gulp
+  - jshint
+  tags:
+  - javascript
+  - webdev
