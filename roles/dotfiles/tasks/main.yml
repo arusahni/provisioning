@@ -4,7 +4,7 @@
 - name: Pull down dotfiles
   git:
     dest: "{{ code_dir }}/dotfiles"
-    repo: https://github.com/arusahni/dotfiles.git
+    repo: git@github.com:arusahni/dotfiles.git
     accept_hostkey: yes
     force: yes
 - name: Change dotfiles owner
