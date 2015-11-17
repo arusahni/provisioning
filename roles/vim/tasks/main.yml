@@ -6,9 +6,32 @@
     - vim-gtk
     - git
     - exuberant-ctags
+    - python-dev
+    - python-pip
+    - python3-dev
+    - python3-pip
+    - xsel
+
+- name: Add NeoVim PPA
+  apt_repository: repo="ppa:neovim-ppa/unstable"
+
+- name: Install NeoVim
+  apt: pkg=neovim
+
+- name: Enable NeoVim Python support
+  pip: name=neovim
 
 - name: Symlink Vim configuration
+  become_user: "{{ user }}"
   file: src="{{ code_dir }}/dotfiles/vimrc" dest=/home/{{ user }}/.vimrc state=link
+
+- name: Create Neovim config directory
+  become_user: "{{ user }}"
+  file: path=/home/{{ user }}/.config/nvim state=directory
+
+- name: Symlink NeoVim configuration
+  become_user: "{{ user }}"
+  file: src="{{ code_dir }}/dotfiles/vimrc" dest=/home/{{ user }}/.config/nvim/init.vim state=link
 
 - name: Install Powerline fonts
   command: ./powerline-setup.sh creates=/home/{{ user }}/.config/fontconfig/conf.d/10-powerline-symbols.conf
