@@ -30,3 +30,9 @@
   with_items:
   - tp-smapi-dkms
   - acpi-call-dkms
+
+- name: Download Dropbox
+  get_url: url=https://www.dropbox.com/download?dl=packages/ubuntu/dropbox_2015.10.28_amd64.deb dest=/tmp/
+
+- name: Install Dropbox
+  apt: deb=/tmp/dropbox_2015.10.28_amd64.deb
