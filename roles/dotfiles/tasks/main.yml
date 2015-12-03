@@ -1,11 +1,16 @@
 ---
 - name: Make code dir
-  file: path="{{ code_dir }}" state=directory
+  sudo: no
+  file: path="{{ code_dir }}" state=directory owner="{{ user }}"
+
 - name: Pull down dotfiles
+  sudo: no
   git:
     dest: "{{ code_dir }}/dotfiles"
-    repo: git@github.com:arusahni/dotfiles.git
+    repo: "git@github.com:arusahni/dotfiles.git"
+    key_file: /home/{{ user }}/.ssh/id_rsa
     accept_hostkey: yes
     force: yes
+
 - name: Change dotfiles owner
   file: path="{{ code_dir }}/dotfiles/" owner="{{ user }}" recurse=yes
