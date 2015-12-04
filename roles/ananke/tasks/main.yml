@@ -33,6 +33,15 @@
 
 - name: Download Dropbox
   get_url: url=https://www.dropbox.com/download?dl=packages/ubuntu/dropbox_2015.10.28_amd64.deb dest=/tmp/
+  tags:
+    - dropbox
+
+- name: Install Dropbox dependencies
+  apt: pkg=python-gpgme
+  tags:
+    - dropbox
 
 - name: Install Dropbox
   apt: deb=/tmp/dropbox_2015.10.28_amd64.deb
+  tags:
+    - dropbox
