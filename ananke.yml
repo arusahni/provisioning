@@ -11,7 +11,7 @@
     code_dir: /home/aru/code
   roles:
     - dotfiles
-    - linux
+    - { role: linux, tags: [linux] }
     - ananke
     - development
     - vim

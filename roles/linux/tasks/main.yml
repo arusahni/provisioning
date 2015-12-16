@@ -24,6 +24,14 @@
     - unzip
     - vlc-nox
 
+- name: Uninstall useless items
+  apt: name={{ item }} state=absent
+  with_items:
+    - myspell-en-au
+    - myspell-en-gb
+    - myspell-en-za
+    - hunspell-en-ca
+
 - name: Deploy zshrc
   file: src="{{ code_dir }}/dotfiles/zshrc" dest=/home/{{ user }}/.zshrc state=link
 
