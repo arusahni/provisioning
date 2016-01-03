@@ -12,6 +12,6 @@
   roles:
     - dotfiles
     - { role: linux, tags: [linux] }
-    - ananke
+    - { role: ananke, tags: [ananke] }
     - development
     - vim
