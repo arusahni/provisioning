@@ -41,18 +41,45 @@
   tags:
     - python
 
+- name: Add the Oracle Java repo
+  apt_repository: repo="ppa:webupd8team/java"
+  tags:
+    - java
+    - android
+
+- name: Accept Java license
+  debconf: name='oracle-java7-installer' question='shared/accepted-oracle-license-v1-1' value='true' vtype='select'
+  tags:
+    - java
+    - android
+
+- name: Install Java runtime
+  apt: pkg=oracle-java8-installer state=present
+  tags:
+    - java
+    - android
+
 - name: Add Ubuntu Make repo
   apt_repository: repo="ppa:ubuntu-desktop/ubuntu-make"
   tags:
     - android
 
-- name: Install Ubuntu Make
-  apt: pkg=ubuntu-developer-tools-center
+- name: Install Android packages
+  apt: pkg={{ item }}
+  with_items:
+    - ubuntu-developer-tools-center
+    - qemu-kvm
+    - libvirt-bin
+    - ubuntu-vm-builder
+    - bridge-utils
   tags:
     - android
 
-- name: Make Android Studio location
-  file: path=/opt/android-studio state=directory owner={{ user }}
+- name: Make Android directories
+  file: path={{ item }} state=directory owner={{ user }}
+  with_items:
+    - /opt/android-studio
+    - /opt/android-sdk
   tags:
     - android
 
