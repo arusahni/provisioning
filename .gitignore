@@ -69,3 +69,9 @@ Session.vim
 .netrwhist
 *~
 
+
+# Created by https://www.gitignore.io/api/ansible
+
+### Ansible ###
+*.retry
+
