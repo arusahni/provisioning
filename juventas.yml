@@ -1,0 +1,18 @@
+---
+# This playbook provisions all of the computer
+
+- name: apply common configuration to all nodes
+  hosts: localhost
+  connection: local
+  user: aru
+  become: yes
+  become_method: sudo
+  vars:
+    user: aru
+    code_dir: /home/aru/code
+  roles:
+    - dotfiles
+    - { role: linux, tags: [linux] }
+    - { role: juventas, tags: [juventas] }
+    - development
+    - vim

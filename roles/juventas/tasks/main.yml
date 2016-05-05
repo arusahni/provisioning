@@ -1,0 +1,40 @@
+---
+- name: Apply TrackPoint responsiveness settings
+  copy: src=rc.local dest=/etc/rc.local
+  tags:
+    - thinkpad
+
+- name: Apply TrackPoint button emulation settings
+  copy: src=.xsessionrc dest=/home/{{ user }}/.xsessionrc owner={{ user }} group={{ user }}
+  tags:
+    - thinkpad
+
+
+- name: Create Windows mount
+  file: path=/mnt/windows state=directory owner={{ user }}
+  tags:
+    - filesystem
+
+
+- name: Install ThinkPad-related packages
+  apt: pkg={{ item }}
+  with_items:
+    - tp-smapi-dkms
+    - acpi-call-dkms
+  tags:
+    - thinkpad
+
+- name: Download Dropbox
+  get_url: url=https://www.dropbox.com/download?dl=packages/ubuntu/dropbox_2015.10.28_amd64.deb dest=/tmp/
+  tags:
+    - dropbox
+
+- name: Install Dropbox dependencies
+  apt: pkg=python-gpgme
+  tags:
+    - dropbox
+
+- name: Install Dropbox
+  apt: deb=/tmp/dropbox_2015.10.28_amd64.deb
+  tags:
+    - dropbox

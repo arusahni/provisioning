@@ -29,6 +29,12 @@
   tags:
     - python
 
+- name: Create virtualenv directory
+  sudo: no
+  file: path=/home/{{ user }}/.virtualenvs state=directory
+  tags:
+    - python
+
 - name: Deploy virtualenv postactivate config
   sudo: no
   command: cp /home/{{ user }}/code/dotfiles/virtualenv/postactivate /home/{{ user }}/.virtualenvs/
@@ -110,7 +116,10 @@
     - webdev
 
 - name: Add the Oracle signing key
-  apt_key: url=https://www.virtualbox.org/download/oracle_vbox.asc state=present
+  apt_key: url=https://www.virtualbox.org/download/{{ item }} state=present
+  with_items:
+    - oracle_vbox.asc
+    - oracle_vbox_2016.asc
   tags:
     - vagrant
 
@@ -122,7 +131,7 @@
     - vagrant
 
 - name: Install virtualization tools
-  apt: name={{ item }} state=present
+  apt: name={{ item }} state=present dpkg_options=allow-unauthenticated,force-confdef,force-confold
   with_items:
     - dkms
     - virtualbox-5.0
