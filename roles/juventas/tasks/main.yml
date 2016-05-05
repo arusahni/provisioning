@@ -9,12 +9,15 @@
   tags:
     - thinkpad
 
-
 - name: Create Windows mount
   file: path=/mnt/windows state=directory owner={{ user }}
   tags:
     - filesystem
 
+- name: Nuke swappiness
+  sysctl: name=vm.swappiness value=0 state=present
+  tags:
+    - filesystem
 
 - name: Install ThinkPad-related packages
   apt: pkg={{ item }}
