@@ -24,6 +24,30 @@
     - unzip
     - vlc-nox
 
+- name: Check if Dropbox is installed
+  command: dpkg-query -l dropbox
+  register: dropbox_is_installed
+  failed_when: dropbox_is_installed.rc >= 1
+  changed_when: no
+
+- name: Download Dropbox
+  get_url: url=https://www.dropbox.com/download?dl=packages/ubuntu/dropbox_2015.10.28_amd64.deb dest=/tmp/
+  when: dropbox_is_installed.rc >=1
+  tags:
+    - dropbox
+
+- name: Install Dropbox dependencies
+  apt: pkg=python-gpgme
+  when: dropbox_is_installed.rc >=1
+  tags:
+    - dropbox
+
+- name: Install Dropbox
+  apt: deb=/tmp/dropbox_2015.10.28_amd64.deb
+  when: dropbox_is_installed.rc >=1
+  tags:
+    - dropbox
+
 - name: Uninstall useless items
   apt: name={{ item }} state=absent
   with_items:
@@ -33,12 +57,15 @@
     - hunspell-en-ca
 
 - name: Deploy zshrc
+  become: no
   file: src="{{ code_dir }}/dotfiles/zshrc" dest=/home/{{ user }}/.zshrc state=link
 
 - name: Set zshell
+  become: no
   user: name=aru shell=/usr/bin/zsh
 
 - name: Deploy .dircolors
+  become: no
   file: src="{{ code_dir }}/dotfiles/dircolors" dest=/home/{{ user }}/.dircolors state=link
 
 - name: Install Google signing key
@@ -74,6 +101,7 @@
   when: opera_is_installed.rc != 0
 
 - name: Make certs directory
+  become: no
   file: path=/home/{{ user }}/certs state=directory owner={{ user }} group={{ user }}
 
 - name: Install fonts
@@ -109,3 +137,13 @@
   - ttf-unfonts-core
   - ttf-wqy-microhei
   - ttf-xfree86-nonfree
+
+- name: Add autostart applications
+  become: no
+  copy: src={{ item }}.desktop dest=/home/{{ user }}/.config/autostart/
+  with_items:
+    - yakuake
+    - choqok
+    - dropbox
+  tags:
+    - dropbox
