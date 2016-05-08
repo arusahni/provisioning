@@ -1,6 +1,11 @@
 ---
 - name: Apply TrackPoint responsiveness settings
-  copy: src=rc.local dest=/etc/rc.local
+  copy: src=rc.local dest=/etc/rc.local mode=a+x
+  tags:
+    - thinkpad
+
+- name: Set TrackPoint udev rule
+  copy: src=10-trackpoint.rules dest=/etc/udev/rules.d/
   tags:
     - thinkpad
 
