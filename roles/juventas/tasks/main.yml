@@ -20,6 +20,45 @@
   tags:
     - filesystem
 
+- name: Install NFS packages
+  apt: pkg=nfs-common state=present
+  tags:
+    - filesystem
+
+- name: Create NAS mounts
+  file: path=/storage/{{ item }} state=directory owner={{ user }}
+  with_items:
+    - backups
+    - downloads
+    - music
+    - other
+    - photo
+    - video
+  tags:
+    - filesystem
+
+- name: Get NAS IP
+  command: dig +short alexandria
+  register: nas_ip
+  tags:
+    - filesystem
+
+- name: Mount the NAS shares
+  mount:
+    fstype: nfs
+    name: /storage/{{ item }}
+    src: "{{ nas_ip.stdout_lines[0] }}:/volume1/{{ item }}"
+    state: mounted
+  with_items:
+    - backups
+    - downloads
+    - music
+    - other
+    - photo
+    - video
+  tags:
+    - filesystem
+
 - name: Nuke swappiness
   sysctl: name=vm.swappiness value=0 state=present
   tags:
