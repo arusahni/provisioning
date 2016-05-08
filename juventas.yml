@@ -10,6 +10,7 @@
   vars:
     user: aru
     code_dir: /home/aru/code
+    hidpi: yes
   roles:
     - dotfiles
     - { role: linux, tags: [linux] }
