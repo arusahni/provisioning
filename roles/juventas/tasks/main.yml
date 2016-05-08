@@ -9,6 +9,12 @@
   tags:
     - thinkpad
 
+- name: Enable hibernation
+  copy: src=com.ubuntu.enable-hibernate.pkla dest=/etc/polkit-1/localauthority/50-local.d/com.ubuntu.enable-hibernate.pkla
+  tags:
+    - power
+    - thinkpad
+
 - name: Create Windows mount
   file: path=/mnt/windows state=directory owner={{ user }}
   tags:
