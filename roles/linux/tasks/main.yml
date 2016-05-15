@@ -22,7 +22,7 @@
     - libpng12-dev
     - unrar
     - unzip
-    - vlc-nox
+    - vlc
 
 - name: Check if Dropbox is installed
   command: dpkg-query -l dropbox
@@ -144,6 +144,37 @@
   - ttf-unfonts-core
   - ttf-wqy-microhei
   - ttf-xfree86-nonfree
+  tags:
+    - fonts
+
+- name: Download Source Code Pro
+  become: no
+  get_url: url=https://github.com/adobe-fonts/source-code-pro/archive/2.010R-ro/1.030R-it.tar.gz dest=/tmp/
+  tags:
+    - fonts
+
+- name: Uncompress package
+  become: no
+  unarchive: src=/tmp/1.030R-it.tar.gz dest=/tmp/
+  tags:
+    - fonts
+
+- name: Create fonts directory
+  become: no
+  file: path=/home/{{ user }}/.fonts state=directory
+  tags:
+    - fonts
+
+- name: Copy fonts over
+  become: no
+  shell: cp /tmp/source-code-pro-2.010R-ro-1.030R-it/OTF/*.otf /home/{{ user }}/.fonts/
+  tags:
+    - fonts
+
+- name: generate font cache
+  command: fc-cache -f -v
+  tags:
+    - fonts
 
 - name: Add autostart applications
   become: no
