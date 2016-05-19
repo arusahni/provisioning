@@ -88,6 +88,22 @@
   tags:
     - python
 
+- name: Install miscellaneous utils
+  become: no
+  pip: name={{ item }} virtualenv=/home/{{ user }}/.virtualenvs/tools virtualenv_python=python3
+  with_items:
+    - httpie
+  tags:
+    - python
+
+- name: Link miscellaneous utils
+  become: no
+  file: src=/home/{{ user }}/.virtualenvs/tools/bin/{{ item }} dest=/home/{{ user }}/bin/{{ item }} state=link
+  with_items:
+    - http
+  tags:
+    - python
+
 - name: Add the Oracle Java repo
   apt_repository: repo="ppa:webupd8team/java"
   tags:
