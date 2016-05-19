@@ -1,15 +1,24 @@
 ---
+- name: Create local bin directory
+  become: no
+  file: path=/home/{{ user }}/bin state=directory
+  tags:
+    - always
+
 - name: Deploy gitconfig
+  become: no
   file: src="{{ code_dir }}/dotfiles/gitconfig" dest=/home/{{ user }}/.gitconfig state=link
   tags:
-  - any
+    - always
 
 - name: Deploy Ack settings
+  become: no
   file: src="{{ code_dir }}/dotfiles/ackrc" dest=/home/{{ user }}/.ackrc state=link
   tags:
-    - any
+    - always
 
 - name: Deploy pylintrc
+  become: no
   file: src="{{ code_dir }}/dotfiles/pylintrc" dest=/home/{{ user }}/.pylintrc state=link
   tags:
     - python
@@ -30,20 +39,52 @@
     - python
 
 - name: Create virtualenv directory
-  sudo: no
+  become: no
   file: path=/home/{{ user }}/.virtualenvs state=directory
   tags:
     - python
 
 - name: Deploy virtualenv postactivate config
-  sudo: no
+  become: no
   command: cp /home/{{ user }}/code/dotfiles/virtualenv/postactivate /home/{{ user }}/.virtualenvs/
   tags:
     - python
 
 - name: Deploy virtualenv postdeactivate config
-  sudo: no
+  become: no
   command: cp /home/{{ user }}/code/dotfiles/virtualenv/postdeactivate /home/{{ user }}/.virtualenvs/
+  tags:
+    - python
+
+- name: Install CSV utils
+  become: no
+  pip: name={{ item }} virtualenv=/home/{{ user }}/.virtualenvs/csvkit virtualenv_python=python3
+  with_items:
+    - csvkit
+    - xlsx2csv
+  tags:
+    - python
+
+- name: Link csvkit binaries
+  become: no
+  file: src=/home/{{ user }}/.virtualenvs/csvkit/bin/{{ item }} dest=/home/{{ user }}/bin/{{ item }} state=link
+  with_items:
+    - csvclean
+    - csvcut
+    - csvformat
+    - csvgrep
+    - csvjoin
+    - csvjson
+    - csvlook
+    - csvpy
+    - csvsort
+    - csvsql
+    - csvstack
+    - csvstat
+    - in2csv
+    - runxlrd.py
+    - sql2csv
+    - xlsx2csv
   tags:
     - python
 
@@ -138,3 +179,4 @@
     - vagrant
   tags:
     - vagrant
+
