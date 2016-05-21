@@ -68,6 +68,11 @@
   become: no
   file: src="{{ code_dir }}/dotfiles/dircolors" dest=/home/{{ user }}/.dircolors state=link
 
+- name: Add Kubuntu backports
+  apt_repository: repo=ppa:kubuntu-ppa/backports
+  tags:
+    - kde
+
 - name: Install Google signing key
   shell: wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 
