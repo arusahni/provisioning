@@ -116,6 +116,11 @@
   become: no
   file: path=/home/{{ user }}/certs state=directory owner={{ user }} group={{ user }}
 
+- name: Accept MS Core Fonts license
+  debconf: name='ttf-mscorefonts-installer' quetion='msttcorefonts/accepted-mscorefonts-eula' value='true' vtype='select'
+  tags:
+    - fonts
+
 - name: Install fonts
   apt: name={{ item }}
   with_items:
