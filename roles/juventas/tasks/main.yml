@@ -20,6 +20,11 @@
     - power
     - thinkpad
 
+- name: Disable xvideo rendering because Skylake
+  copy: src=20-intel.conf dest=/usr/share/X11/xorg.conf.d/20-intel.conf
+  tags:
+    - thinkpad
+
 - name: Create Windows mount
   file: path=/mnt/windows state=directory owner={{ user }}
   tags:
