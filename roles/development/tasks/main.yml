@@ -174,6 +174,13 @@
     - javascript
     - webdev
 
+- name: Install jq
+  apt: pkg=jq
+  tags:
+    - python
+    - webdev
+    - javascript
+
 - name: Add the Oracle signing key
   apt_key: url=https://www.virtualbox.org/download/{{ item }} state=present
   with_items:
