@@ -86,3 +86,17 @@
     - acpi-call-dkms
   tags:
     - thinkpad
+
+- name: Generate HiDPI Grub font
+  command: "grub-mkfont --output=/boot/grub/fonts/DejaVuSansMono24.pf2 --size=24 /usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"
+  args:
+    creates: /boot/grub/fonts/DejaVuSansMono24.pf2
+  register: font_created
+  tags:
+    - hidpi
+
+- name: Update Grub fonts
+  command: update-grub
+  when: font_created.changed
+  tags:
+    - hidpi
