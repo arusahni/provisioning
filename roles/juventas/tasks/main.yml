@@ -100,3 +100,12 @@
   when: font_created.changed
   tags:
     - hidpi
+
+- name: Disable akonadi
+  become: no
+  lineinfile:
+    dest: ~/.config/akonadi/akonadiserverrc
+    regexp: StartServer=
+    line: StartServer=false
+  tags:
+    - kde
