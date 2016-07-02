@@ -92,18 +92,22 @@
   become: no
   pip: name={{ item }} virtualenv=/home/{{ user }}/.virtualenvs/tools virtualenv_python=python3
   with_items:
+    - grip
     - httpie
     - lolologist
   tags:
+    - webdev
     - python
 
 - name: Link miscellaneous utils
   become: no
   file: src=/home/{{ user }}/.virtualenvs/tools/bin/{{ item }} dest=/home/{{ user }}/bin/{{ item }} state=link
   with_items:
+    - grip
     - http
     - lolologist
   tags:
+    - webdev
     - python
 
 - name: Add the Oracle Java repo
