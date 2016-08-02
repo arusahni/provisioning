@@ -1,10 +1,10 @@
 ---
 - name: Make code dir
-  sudo: no
+  become: no
   file: path="{{ code_dir }}" state=directory owner="{{ user }}"
 
 - name: Pull down dotfiles
-  sudo: no
+  become: no
   git:
     dest: "{{ code_dir }}/dotfiles"
     repo: "git@github.com:arusahni/dotfiles.git"
