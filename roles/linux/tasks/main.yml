@@ -20,6 +20,8 @@
     - libjpeg-dev
     - libjpeg8-dev
     - libpng12-dev
+    - libxml2-dev
+    - libxslt1-dev
     - unrar
     - unzip
     - vlc
