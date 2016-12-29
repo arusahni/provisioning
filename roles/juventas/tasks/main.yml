@@ -92,6 +92,7 @@
   args:
     creates: /boot/grub/fonts/DejaVuSansMono24.pf2
   register: font_created
+  when: hidpi
   tags:
     - hidpi
 
@@ -109,3 +110,15 @@
     line: StartServer=false
   tags:
     - kde
+
+- name: Set system tray icon sizes
+  lineinfile:
+    dest: /usr/share/plasma/plasmoids/org.kde.plasma.private.systemtray/contents/config/main.xml
+    regexp: <default>1</default>
+    line: <default>2</default>
+  when: hidpi
+  tags:
+    - kde
+    - hidpi
+    - kde-hidpi
+
