@@ -121,7 +121,7 @@
   file: path=/home/{{ user }}/certs state=directory owner={{ user }} group={{ user }}
 
 - name: Accept MS Core Fonts license
-  debconf: name='ttf-mscorefonts-installer' quetion='msttcorefonts/accepted-mscorefonts-eula' value='true' vtype='select'
+  debconf: name='ttf-mscorefonts-installer' question='msttcorefonts/accepted-mscorefonts-eula' value='true' vtype='select'
   tags:
     - fonts
 
@@ -163,13 +163,14 @@
 
 - name: Download Source Code Pro
   become: no
-  get_url: url=https://github.com/adobe-fonts/source-code-pro/archive/2.010R-ro/1.030R-it.tar.gz dest=/tmp/
+  get_url: url=https://github.com/adobe-fonts/source-code-pro/archive/2.030R-ro/1.050R-it.tar.gz dest=/tmp/
+  register: source_code_pro_result
   tags:
     - fonts
 
 - name: Uncompress package
   become: no
-  unarchive: src=/tmp/1.030R-it.tar.gz dest=/tmp/
+  unarchive: src="{{ source_code_pro_result['dest'] }}" dest=/tmp/
   tags:
     - fonts
 
@@ -181,7 +182,7 @@
 
 - name: Copy fonts over
   become: no
-  shell: cp /tmp/source-code-pro-2.010R-ro-1.030R-it/OTF/*.otf /home/{{ user }}/.fonts/
+  shell: cp /tmp/source-code-pro-2.030R-ro-1.050R-it/OTF/*.otf /home/{{ user }}/.fonts/
   tags:
     - fonts
 
