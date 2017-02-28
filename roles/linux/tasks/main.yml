@@ -196,7 +196,6 @@
   copy: src={{ item }}.desktop dest=/home/{{ user }}/.config/autostart/
   with_items:
     - yakuake
-    - choqok
     - dropbox
   tags:
     - dropbox
