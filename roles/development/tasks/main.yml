@@ -95,6 +95,8 @@
     - grip
     - httpie
     - lolologist
+    - silversearcher-ag
+    - ack-grep
   tags:
     - webdev
     - python
