@@ -63,6 +63,7 @@
     fstype: nfs
     name: /storage/{{ item }}
     src: "{{ nas_ip.stdout_lines[0] }}:/volume1/{{ item }}"
+    opts: x-systemd.automount,noauto
     state: mounted
   with_items:
     - backups
