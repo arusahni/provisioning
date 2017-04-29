@@ -70,10 +70,10 @@
   become: no
   file: src="{{ code_dir }}/dotfiles/dircolors" dest=/home/{{ user }}/.dircolors state=link
 
-- name: Add Kubuntu backports
-  apt_repository: repo=ppa:kubuntu-ppa/backports
-  tags:
-    - kde
+# - name: Add Kubuntu backports
+#   apt_repository: repo=ppa:kubuntu-ppa/backports
+#   tags:
+#     - kde
 
 - name: Install Google signing key
   shell: wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
@@ -190,9 +190,7 @@
   - ttf-dejavu-extra
   - ttf-liberation
   - ttf-mscorefonts-installer
-  - ttf-oxygen-font-family
   - ttf-ubuntu-font-family
-  - ttf-unfonts-core
   - ttf-wqy-microhei
   - ttf-xfree86-nonfree
   tags:

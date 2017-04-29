@@ -30,6 +30,8 @@
   apt: pkg={{ item }}
   with_items:
     - build-essential
+    - silversearcher-ag
+    - ack-grep
     - python-dev
     - python-pip
     - python3-pip
@@ -95,8 +97,6 @@
     - grip
     - httpie
     - lolologist
-    - silversearcher-ag
-    - ack-grep
   tags:
     - webdev
     - python
@@ -174,8 +174,8 @@
   npm: name={{ item }} global=yes
   with_items:
     - bower
-    - gulp
-    - jshint
+    - gulp-cli
+    - eslint
   tags:
     - javascript
     - webdev
