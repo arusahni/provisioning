@@ -78,7 +78,7 @@
 - name: Install Google signing key
   shell: wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 
-- name: Add Chrome source
+- name: Add Chrome apt source
   apt_repository: repo="deb http://dl.google.com/linux/chrome/deb/ stable main" state=present
 
 - name: Check if Chrome is installed
@@ -90,6 +90,43 @@
 - name: Install Chrome beta
   apt: name=google-chrome-beta update_cache=yes
   when: chrome_is_installed.rc != 0
+
+- name: Install Vivaldi signing key
+  shell: wget -q -O - http://repo.vivaldi.com/stable/linux_signing_key.pub | sudo apt-key add -
+  tags:
+    - vivaldi
+
+- name: Add Vivaldi apt source
+  apt_repository: repo="deb http://repo.vivaldi.com/stable/deb/ stable main" state=present
+  tags:
+    - vivaldi
+
+- name: Check if Vivaldi is installed
+  command: dpkg-query -l vivaldi-stable
+  register: vivaldi_is_installed
+  failed_when: vivaldi_is_installed.rc > 1
+  changed_when: no
+  tags:
+    - vivaldi
+
+- name: Install Vivaldi
+  apt: name=vivaldi-stable update_cache=yes
+  when: vivaldi_is_installed.rc != 0
+  tags:
+    - vivaldi
+
+- name: Deploy Vivaldi customizations
+  file: src="{{ code_dir }}/dotfiles/vivaldi-linux-custom.css" dest=/opt/vivaldi/resources/vivaldi/style/custom.css
+  tags:
+    - vivaldi
+
+- name: Apply Vivaldi customizations
+  lineinfile:
+    dest: /opt/vivaldi/resources/vivaldi/browser.html
+    line: "    <link rel=\"stylesheet\" href=\"style/custom.css\" />"
+    insertbefore: "</head>"
+  tags:
+    - vivaldi
 
 - name: Force HiDPI Chrome
   lineinfile:
