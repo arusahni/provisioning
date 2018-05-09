@@ -1,0 +1,20 @@
+---
+# This playbook provisions Soteria
+
+- name: apply common configuration to all nodes
+  hosts: localhost
+  connection: local
+  user: aru
+  become_method: sudo
+  vars:
+    user: aru
+    code_dir: /home/{{ user }}/code
+    hidpi: yes
+    hidpi_scale: 2.0
+    android_dev: no
+  roles:
+    - dotfiles
+    - { role: linux, tags: [linux] }
+    - { role: soteria, tags: [soteria] }
+    - { role: development, skip_tags: [android] }
+    - vim

@@ -1,9 +1,9 @@
 ---
 - name: Install base items
+  become: yes
   apt: name={{ item }}
   with_items:
     - yakuake
-    - choqok
     - zsh
     - tlp
     - smartmontools
@@ -19,38 +19,19 @@
     - lame
     - libjpeg-dev
     - libjpeg8-dev
-    - libpng12-dev
+    - libpng-dev
     - libxml2-dev
     - libxslt1-dev
     - unrar
     - unzip
     - vlc
-
-- name: Check if Dropbox is installed
-  command: dpkg-query -l dropbox
-  register: dropbox_is_installed
-  failed_when: dropbox_is_installed.rc >= 1
-  changed_when: no
-
-- name: Download Dropbox
-  get_url: url=https://www.dropbox.com/download?dl=packages/ubuntu/dropbox_2015.10.28_amd64.deb dest=/tmp/
-  when: dropbox_is_installed.rc >=1
-  tags:
-    - dropbox
-
-- name: Install Dropbox dependencies
-  apt: pkg=python-gpgme
-  when: dropbox_is_installed.rc >=1
-  tags:
-    - dropbox
-
-- name: Install Dropbox
-  apt: deb=/tmp/dropbox_2015.10.28_amd64.deb
-  when: dropbox_is_installed.rc >=1
-  tags:
-    - dropbox
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
 
 - name: Uninstall useless items
+  become: yes
   apt: name={{ item }} state=absent
   with_items:
     - myspell-en-au
@@ -59,110 +40,58 @@
     - hunspell-en-ca
 
 - name: Deploy zshrc
-  become: no
-  file: src="{{ code_dir }}/dotfiles/zshrc" dest=/home/{{ user }}/.zshrc state=link
+  file: src="{{ code_dir }}/dotfiles/{{ item }}" dest="/home/{{ user }}/.{{ item }}" state=link
+  with_items:
+    - zsh
+    - zshrc
 
 - name: Set zshell
-  become: no
-  user: name=aru shell=/usr/bin/zsh
+  become: yes
+  user: name="{{ user }}" shell=/usr/bin/zsh
 
 - name: Deploy .dircolors
-  become: no
   file: src="{{ code_dir }}/dotfiles/dircolors" dest=/home/{{ user }}/.dircolors state=link
 
-# - name: Add Kubuntu backports
-#   apt_repository: repo=ppa:kubuntu-ppa/backports
-#   tags:
-#     - kde
-
 - name: Install Google signing key
-  shell: wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+  become: yes
+  apt_key: url=https://dl.google.com/linux/linux_signing_key.pub state=present
 
 - name: Add Chrome apt source
-  apt_repository: repo="deb http://dl.google.com/linux/chrome/deb/ stable main" state=present
-
-- name: Check if Chrome is installed
-  command: dpkg-query -l google-chrome-beta
-  register: chrome_is_installed
-  failed_when: chrome_is_installed.rc > 1
-  changed_when: no
+  become: yes
+  apt_repository:
+    repo: "deb http://dl.google.com/linux/chrome/deb/ stable main"
+    state: present
+    update_cache: yes
 
 - name: Install Chrome beta
-  apt: name=google-chrome-beta update_cache=yes
-  when: chrome_is_installed.rc != 0
-
-- name: Install Vivaldi signing key
-  shell: wget -q -O - http://repo.vivaldi.com/stable/linux_signing_key.pub | sudo apt-key add -
-  tags:
-    - vivaldi
-
-- name: Add Vivaldi apt source
-  apt_repository: repo="deb http://repo.vivaldi.com/stable/deb/ stable main" state=present
-  tags:
-    - vivaldi
-
-- name: Check if Vivaldi is installed
-  command: dpkg-query -l vivaldi-stable
-  register: vivaldi_is_installed
-  failed_when: vivaldi_is_installed.rc > 1
-  changed_when: no
-  tags:
-    - vivaldi
-
-- name: Install Vivaldi
-  apt: name=vivaldi-stable update_cache=yes
-  when: vivaldi_is_installed.rc != 0
-  tags:
-    - vivaldi
-
-- name: Deploy Vivaldi customizations
-  file: src="{{ code_dir }}/dotfiles/vivaldi-linux-custom.css" dest=/opt/vivaldi/resources/vivaldi/style/custom.css
-  tags:
-    - vivaldi
-
-- name: Apply Vivaldi customizations
-  lineinfile:
-    dest: /opt/vivaldi/resources/vivaldi/browser.html
-    line: "    <link rel=\"stylesheet\" href=\"style/custom.css\" />"
-    insertbefore: "</head>"
-  tags:
-    - vivaldi
+  become: yes
+  apt: name=google-chrome-beta
 
 - name: Force HiDPI Chrome
+  become: yes
   lineinfile:
     dest: /usr/share/applications/google-chrome-beta.desktop
     regexp: Exec=/usr/bin/google-chrome-beta %U
-    line: Exec=/usr/bin/google-chrome-beta %U --force-device-scale-factor=1.3
+    line: Exec=/usr/bin/google-chrome-beta %U --force-device-scale-factor={{ hidpi_scale }}
   when: hidpi
   tags:
     - hidpi
 
-- name: Install Opera signing key
-  shell: wget -q -O - http://deb.opera.com/archive.key | apt-key add -
-
-- name: Add Opera source
-  apt_repository: repo="deb http://deb.opera.com/opera/ stable non-free" state=present
-
-- name: Check if Opera is installed
-  command: dpkg-query -l opera
-  register: opera_is_installed
-  failed_when: opera_is_installed.rc > 1
-  changed_when: no
-
-- name: Install Opera
-  apt: name=opera update_cache=yes
-  when: opera_is_installed.rc != 0
-
 - name: Make certs directory
-  become: no
   file: path=/home/{{ user }}/certs state=directory owner={{ user }} group={{ user }}
 
 - name: Accept MS Core Fonts license
-  debconf: name='ttf-mscorefonts-installer' question='msttcorefonts/accepted-mscorefonts-eula' value='true' vtype='select'
+  become: yes
+  debconf:
+    name: ttf-mscorefonts-installer
+    question: msttcorefonts/accepted-mscorefonts-eula
+    value: 'true'
+    vtype: select
   tags:
     - fonts
 
 - name: Install fonts
+  become: yes
   apt: name={{ item }}
   with_items:
   - fonts-dejavu
@@ -188,7 +117,6 @@
   - ttf-dejavu
   - ttf-dejavu-core
   - ttf-dejavu-extra
-  - ttf-liberation
   - ttf-mscorefonts-installer
   - ttf-ubuntu-font-family
   - ttf-wqy-microhei
@@ -197,40 +125,28 @@
     - fonts
 
 - name: Download Source Code Pro
-  become: no
   get_url: url=https://github.com/adobe-fonts/source-code-pro/archive/2.030R-ro/1.050R-it.tar.gz dest=/tmp/
   register: source_code_pro_result
   tags:
     - fonts
 
 - name: Uncompress package
-  become: no
   unarchive: src="{{ source_code_pro_result['dest'] }}" dest=/tmp/
   tags:
     - fonts
 
 - name: Create fonts directory
-  become: no
   file: path=/home/{{ user }}/.fonts state=directory
   tags:
     - fonts
 
 - name: Copy fonts over
-  become: no
   shell: cp /tmp/source-code-pro-2.030R-ro-1.050R-it/OTF/*.otf /home/{{ user }}/.fonts/
-  tags:
-    - fonts
-
-- name: generate font cache
-  command: fc-cache -f -v
+  notify: generate font cache
   tags:
     - fonts
 
 - name: Add autostart applications
-  become: no
   copy: src={{ item }}.desktop dest=/home/{{ user }}/.config/autostart/
   with_items:
     - yakuake
-    - dropbox
-  tags:
-    - dropbox

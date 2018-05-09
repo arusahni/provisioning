@@ -1,4 +1,4 @@
-xinput set-prop "TPPS/2 IBM TrackPoint" "libinput Scroll Method Enabled" 0 0 0
 xinput set-prop "SynPS/2 Synaptics TouchPad" "Synaptics Palm Detection" 1
 xinput set-prop "SynPS/2 Synaptics TouchPad" "Synaptics Palm Dimensions" 4 175
 xinput set-prop "SynPS/2 Synaptics TouchPad" "Synaptics Tap Action" "0" "0" "0" "0" "0" "0" "0"
+xinput set-prop "TPPS/2 IBM TrackPoint" "libinput Scroll Method Enabled" 0 0 0

@@ -11,9 +11,12 @@
     user: aru
     code_dir: /home/aru/code
     hidpi: yes
+    hidpi_scale: 1.3
   roles:
     - dotfiles
     - { role: linux, tags: [linux] }
+    - { role: dropbox, tags: [dropbox] }
+    - { role: opera, tags: [opera] }
     - { role: juventas, tags: [juventas] }
-    - development
+    - { role: development, tags: [development] }
     - vim

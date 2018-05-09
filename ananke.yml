@@ -1,5 +1,5 @@
 ---
-# This playbook provisions all of the computer
+# This playbook provisions Ananke
 
 - name: apply common configuration to all nodes
   hosts: localhost
@@ -12,6 +12,8 @@
   roles:
     - dotfiles
     - { role: linux, tags: [linux] }
+    - { role: dropbox, tags: [dropbox] }
+    - { role: opera, tags: [opera] }
     - { role: ananke, tags: [ananke] }
     - development
     - vim

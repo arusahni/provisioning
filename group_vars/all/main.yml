@@ -1,2 +1,4 @@
 ---
+android_dev: yes
 hidpi: no
+hidpi_scale: 1.0

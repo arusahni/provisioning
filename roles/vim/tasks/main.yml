@@ -1,5 +1,6 @@
 ---
 - name: Install vim
+  become: yes
   apt: name={{ item }}
   with_items:
     - curl
@@ -13,28 +14,24 @@
     - xsel
 
 - name: Add NeoVim PPA
+  become: yes
   apt_repository: repo="ppa:neovim-ppa/unstable"
 
 - name: Install NeoVim
+  become: yes
   apt: pkg=neovim
-
-- name: Enable NeoVim Python support
-  pip: name=neovim
+  notify: install NeoVim python packages
 
 - name: Symlink Vim configuration
-  become_user: "{{ user }}"
   file: src="{{ code_dir }}/dotfiles/vimrc" dest=/home/{{ user }}/.vimrc state=link
 
 - name: Create Neovim config directory
-  become_user: "{{ user }}"
   file: path=/home/{{ user }}/.config/nvim state=directory
 
 - name: Symlink NeoVim configuration
-  become_user: "{{ user }}"
   file: src="{{ code_dir }}/dotfiles/vimrc" dest=/home/{{ user }}/.config/nvim/init.vim state=link
 
 - name: Install Powerline fonts
   command: ./powerline-setup.sh creates=/home/{{ user }}/.config/fontconfig/conf.d/10-powerline-symbols.conf
-  become_user: "{{ user }}"
   args:
     chdir: "{{ code_dir }}/dotfiles"

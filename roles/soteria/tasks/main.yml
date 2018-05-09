@@ -1,0 +1,70 @@
+---
+- name: Enable hibernation
+  become: yes
+  copy: src=com.ubuntu.enable-hibernate.pkla dest=/etc/polkit-1/localauthority/50-local.d/com.ubuntu.enable-hibernate.pkla
+  tags:
+    - power
+
+- name: Install NFS packages
+  become: yes
+  apt: pkg=nfs-common state=present
+  tags:
+    - filesystem
+
+- name: Tune swappiness
+  become: yes
+  sysctl: name=vm.swappiness value=1 state=present
+  tags:
+    - filesystem
+
+- name: Generate HiDPI Grub font
+  become: yes
+  command: "grub-mkfont --output=/boot/grub/fonts/DejaVuSansMono24.pf2 --size=24 /usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"
+  args:
+    creates: /boot/grub/fonts/DejaVuSansMono24.pf2
+  notify: update grub
+  when: hidpi
+  tags:
+    - hidpi
+
+- name: Set suspend behavior
+  become: yes
+  lineinfile:
+    dest: /etc/default/grub
+    firstmatch: yes
+    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="'
+    line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet splash mem_sleep_default=deep"'
+  notify: update grub
+
+- name: Disable akonadi
+  lineinfile:
+    dest: ~/.config/akonadi/akonadiserverrc
+    create: yes
+    regexp: StartServer=
+    line: StartServer=false
+  tags:
+    - kde
+
+- name: Make plasma use KDE scaling
+  lineinfile:
+    dest: ~/.config/plasma-workspace/env/plasma.sh
+    create: yes
+    line: export PLASMA_USE_QT_SCALING=1
+  when: hidpi
+  tags:
+    - kde
+    - hidpi
+    - kde-hidpi
+
+- name: Add Arc theme repo
+  become: yes
+  apt_repository:
+    repo: 'ppa:papirus/papirus'
+  tags:
+    - kde
+
+- name: Install Arc theme
+  become: yes
+  apt: pkg=arc-kde install_recommends=yes
+  tags:
+    - kde

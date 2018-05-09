@@ -1,0 +1,12 @@
+---
+- name: Install Opera signing key
+  become: yes
+  shell: wget -q -O - http://deb.opera.com/archive.key | apt-key add -
+
+- name: Add Opera source
+  become: yes
+  apt_repository: repo="deb http://deb.opera.com/opera/ stable non-free" state=present update_cache=yes
+
+- name: Install Opera
+  become: yes
+  apt: name=opera

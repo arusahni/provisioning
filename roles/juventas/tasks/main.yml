@@ -1,10 +1,12 @@
 ---
 - name: Apply TrackPoint responsiveness settings
+  become: yes
   copy: src=rc.local dest=/etc/rc.local mode=a+x
   tags:
     - thinkpad
 
 - name: Set TrackPoint udev rule
+  become: yes
   copy: src=10-trackpoint.rules dest=/etc/udev/rules.d/
   tags:
     - thinkpad
@@ -63,7 +65,7 @@
     fstype: nfs
     name: /storage/{{ item }}
     src: "{{ nas_ip.stdout_lines[0] }}:/volume1/{{ item }}"
-    opts: x-systemd.automount,noauto
+    opts: noauto,x-systemd.automount,x-systemd.device-timeout=10
     state: mounted
   with_items:
     - backups

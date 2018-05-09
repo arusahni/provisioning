@@ -1,5 +1,6 @@
 ---
 - name: Apply TrackPoint responsiveness settings
+  become: yes
   copy: src=rc.local dest=/etc/rc.local
   tags:
     - thinkpad
@@ -10,6 +11,7 @@
     - thinkpad
 
 - name: Make WiFi WiFast
+  become: yes
   lineinfile:
     dest: /etc/modprobe.d/iwlwifi-opt.conf
     regexp: "^options iwlwifi"
@@ -19,6 +21,7 @@
     - network
 
 - name: Disable IPV6
+  become: yes
   lineinfile:
     dest: /etc/sysctl.conf
     regexp: "^{{ item }}"
@@ -32,11 +35,13 @@
     - network
 
 - name: Create Windows mount
+  become: yes
   file: path=/mnt/windows state=directory owner={{ user }}
   tags:
     - filesystem
 
 - name: Add Windows mount to the fstab
+  become: yes
   lineinfile:
     dest: /etc/fstab
     regexp: ^UUID=607202BF72029A44
@@ -51,24 +56,10 @@
     - filesystem
 
 - name: Install ThinkPad-related packages
+  become: yes
   apt: pkg={{ item }}
   with_items:
     - tp-smapi-dkms
     - acpi-call-dkms
   tags:
     - thinkpad
-
-- name: Download Dropbox
-  get_url: url=https://www.dropbox.com/download?dl=packages/ubuntu/dropbox_2015.10.28_amd64.deb dest=/tmp/
-  tags:
-    - dropbox
-
-- name: Install Dropbox dependencies
-  apt: pkg=python-gpgme
-  tags:
-    - dropbox
-
-- name: Install Dropbox
-  apt: deb=/tmp/dropbox_2015.10.28_amd64.deb
-  tags:
-    - dropbox
