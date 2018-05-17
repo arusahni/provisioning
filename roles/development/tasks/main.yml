@@ -1,8 +1,4 @@
 ---
-- name: Create local bin directory
-  become: no
-  file: path=/home/{{ user }}/bin state=directory
-
 - name: Deploy gitconfig
   become: no
   file: src="{{ code_dir }}/dotfiles/gitconfig" dest=/home/{{ user }}/.gitconfig state=link

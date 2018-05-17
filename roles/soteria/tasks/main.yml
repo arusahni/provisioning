@@ -1,4 +1,7 @@
 ---
+- name: Create local bin directory
+  file: path=/home/{{ user }}/bin state=directory
+
 - name: Enable hibernation
   become: yes
   copy: src=com.ubuntu.enable-hibernate.pkla dest=/etc/polkit-1/localauthority/50-local.d/com.ubuntu.enable-hibernate.pkla
@@ -68,3 +71,36 @@
   apt: pkg=arc-kde install_recommends=yes
   tags:
     - kde
+
+- name: Install konsole colorscheme
+  get_url:
+    url: https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/konsole/Broadcast.colorscheme
+    dest: ~/.local/share/konsole/Broadcast.colorscheme
+  tags:
+    - kde
+
+- name: Install emoji keyboard prereqs
+  become: yes
+  apt: pkg={{ item }} state=present
+  with_items:
+    - python3-gi
+    - gir1.2-gtk-3.0
+    - gir1.2-glib-2.0
+    - python3-evdev
+    - gir1.2-appindicator3-0.1
+
+- name: Install emoji keyboard
+  pip:
+    name: '{{ item }}'
+    virtualenv: /home/{{ user }}/.virtualenvs/emoji-keyboard
+    virtualenv_site_packages: yes
+    virtualenv_python: python3
+  with_items:
+    - python-xlib
+    - https://github.com/OzymandiasTheGreat/emoji-keyboard/archive/master.zip
+
+- name: Link emoji keyboard
+  file: src=/home/{{ user }}/.virtualenvs/emoji-keyboard/bin/emoji-keyboard dest=/home/{{ user }}/bin/emoji-keyboard state=link
+
+- name: Make emoji keyboard autostart
+  copy: src=emoji-keyboard.desktop dest=~/.config/autostart/

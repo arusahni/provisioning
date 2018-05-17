@@ -29,6 +29,8 @@
     - ca-certificates
     - curl
     - software-properties-common
+    - exfat-utils
+    - exfat-fuse
 
 - name: Uninstall useless items
   become: yes
