@@ -1,23 +1,8 @@
 ---
-- name: Check if Dropbox is installed
-  command: dpkg-query -l dropbox
-  register: dropbox_is_installed
-  failed_when: dropbox_is_installed.rc >= 1
-  changed_when: no
-
-- name: Download Dropbox
-  get_url: url=https://www.dropbox.com/download?dl=packages/ubuntu/dropbox_2015.10.28_amd64.deb dest=/tmp/
-  when: dropbox_is_installed.rc >=1
-
-- name: Install Dropbox dependencies
-  become: yes
-  apt: pkg=python-gpgme
-  when: dropbox_is_installed.rc >=1
-
 - name: Install Dropbox
   become: yes
-  apt: deb=/tmp/dropbox_2015.10.28_amd64.deb
-  when: dropbox_is_installed.rc >=1
+  become_user: aur_builder
+  aur: name=dropbox skip_installed=true
 
 - name: Set autostart
   copy: src=dropbox.desktop dest=/home/{{ user }}/.config/autostart/

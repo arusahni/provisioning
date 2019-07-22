@@ -1,0 +1,123 @@
+---
+- name: Create AUR build user
+  become: yes
+  user:
+    name: aur_builder
+    group: wheel
+
+- name: Set AUR sudo privileges
+  become: yes
+  lineinfile:
+    path: /etc/sudoers.d/11-install-aur_builder
+    line: 'aur_builder ALL=(ALL) NOPASSWD: /usr/bin/pacman'
+    create: yes
+    validate: 'visudo -cf %s'
+
+- name: Install base items
+  become: yes
+  pacman:
+    name:
+      - yakuake
+      - zsh
+      - tlp
+      - smartmontools
+      - ethtool
+      - htop
+      - ncdu
+      - audacity
+      - elinks
+      - gimp
+      - imagemagick
+      - lame
+      - libjpeg-turbo
+      - libjpeg6-turbo
+      - libpng
+      - libxml2
+      - libxslt
+      - unrar
+      - unzip
+      - vlc
+      - ca-certificates
+      - curl
+      - exfat-utils
+      - acpi_call
+
+- name: Deploy zshrc
+  file: src="{{ code_dir }}/dotfiles/{{ item }}" dest="/home/{{ user }}/.{{ item }}" state=link
+  with_items:
+    - zsh
+    - zshrc
+
+- name: Set zshell
+  become: yes
+  user: name="{{ user }}" shell=/usr/bin/zsh
+
+- name: Deploy .dircolors
+  file: src="{{ code_dir }}/dotfiles/dircolors" dest=/home/{{ user }}/.dircolors state=link
+
+- name: Install Chrome beta
+  become_user: aur_builder
+  become: yes
+  aur: name=google-chrome-beta skip_installed=yes
+
+- name: Force HiDPI Chrome
+  become: yes
+  lineinfile:
+    dest: /usr/share/applications/google-chrome-beta.desktop
+    regexp: Exec=/usr/bin/google-chrome-beta %U
+    line: Exec=/usr/bin/google-chrome-beta %U --force-device-scale-factor={{ hidpi_scale }}
+  when: hidpi | bool
+  tags:
+    - hidpi
+
+- name: Make certs directory
+  file: path=/home/{{ user }}/certs state=directory owner={{ user }} group={{ user }}
+
+- name: Install fonts
+  become: yes
+  pacman:
+    name:
+      - ttf-dejavu
+      - ttf-droid
+      - ttf-roboto
+      - ttf-ubuntu-font-family
+      - ttf-bitstream-vera
+      - wqy-microhei
+  tags:
+    - fonts
+
+- name: Download Source Code Pro
+  get_url: url=https://github.com/adobe-fonts/source-code-pro/archive/2.030R-ro/1.050R-it.tar.gz dest=/tmp/
+  register: source_code_pro_result
+  tags:
+    - fonts
+
+- name: Uncompress package
+  unarchive: src="{{ source_code_pro_result['dest'] }}" dest=/tmp/
+  tags:
+    - fonts
+
+- name: Create fonts directory
+  file: path=/home/{{ user }}/.fonts state=directory
+  tags:
+    - fonts
+
+- name: Copy fonts over
+  shell: cp /tmp/source-code-pro-2.030R-ro-1.050R-it/OTF/*.otf /home/{{ user }}/.fonts/
+  notify: generate font cache
+  tags:
+    - fonts
+
+- name: Enable i915 early load
+  become: yes
+  lineinfile:
+    path: /etc/mkinitcpio.conf
+    regexp: '^MODULES='
+    line: 'MODULES=(i915)'
+
+- name: Set i915 guc to load
+  become: yes
+  lineinfile:
+    path: /etc/modprobe.d/i915.conf
+    create: yes
+    line: 'options i915 enable_guc=2'

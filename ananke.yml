@@ -5,13 +5,13 @@
   hosts: localhost
   connection: local
   user: aru
-  sudo: true
+  become_method: sudo
   vars:
     user: aru
     code_dir: /home/aru/code
   roles:
     - dotfiles
-    - { role: linux, tags: [linux] }
+    - { role: archlinux, tags: [linux] }
     - { role: dropbox, tags: [dropbox] }
     - { role: opera, tags: [opera] }
     - { role: ananke, tags: [ananke] }

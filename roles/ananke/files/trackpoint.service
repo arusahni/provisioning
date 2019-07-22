@@ -1,0 +1,8 @@
+[Unit]
+Description=Sets custom TrackPoint settings
+
+[Service]
+ExecStart=/opt/configure-trackpoint.sh
+
+[Install]
+WantedBy=multi-user.target

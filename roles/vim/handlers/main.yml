@@ -1,6 +1,6 @@
 ---
 - name: Install NeoVim python packages
-  pip: name=neovim state=present executable="{{ item }}"
+  pip: name=pyneovim state=present executable="{{ item }}"
   with_items:
     - pip
     - pip3

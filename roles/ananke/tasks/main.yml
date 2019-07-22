@@ -1,7 +1,19 @@
 ---
 - name: Apply TrackPoint responsiveness settings
   become: yes
-  copy: src=rc.local dest=/etc/rc.local
+  copy: src=rc.local dest=/opt/configure-trackpoint.sh
+  tags:
+    - thinkpad
+    
+- name: Deploy TrackPoint service
+  become: yes
+  copy: src=trackpoint.service dest=/etc/systemd/system/trackpoint.service
+  tags:
+    - thinkpad
+    
+- name: Install TrackPoint service
+  become: yes
+  systemd: name=trackpoint state=started daemon_reload=yes
   tags:
     - thinkpad
 
@@ -51,15 +63,16 @@
     - filesystem
 
 - name: Verify mounts
+  become: yes
   command: mount -a
   tags:
     - filesystem
 
 - name: Install ThinkPad-related packages
   become: yes
-  apt: pkg={{ item }}
+  pacman: pkg={{ item }}
   with_items:
-    - tp-smapi-dkms
-    - acpi-call-dkms
+    - tpacpi-bat
+    - acpi_call-dkms
   tags:
     - thinkpad

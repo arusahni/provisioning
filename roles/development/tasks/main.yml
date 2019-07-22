@@ -13,29 +13,21 @@
   tags:
     - python
 
-#- name: Add ripgrep PPA
-#  become: yes
-#  apt_repository:
-#    repo: 'ppa:x4121/ripgrep'
-
 - name: Install dev tools
   become: yes
-  apt: pkg={{ item }}
-  with_items:
-    - ack-grep
-#    - ripgrep
+  become_user: aur_builder
+  aur:
+    name:
+    - jq
+    - ripgrep
 
 - name: Install base Python packages
   become: yes
-  apt: pkg={{ item }}
-  with_items:
-    - build-essential
-    - ack-grep
-    - python-dev
-    - python-pip
-    - python3-pip
-    - python3-dev
-    - virtualenvwrapper
+  pacman:
+    name:
+      - python
+      - python3
+      - python-virtualenvwrapper
   tags:
     - python
 
@@ -66,6 +58,9 @@
   tags:
     - python
 
+- name: Create bin directory
+  file: path=/home/{{ user }}/bin state=directory
+    
 - name: Link csvkit binaries
   become: no
   file: src=/home/{{ user }}/.virtualenvs/csvkit/bin/{{ item }} dest=/home/{{ user }}/bin/{{ item }} state=link
@@ -96,7 +91,6 @@
     - grip
     - restview
     - httpie
-    - lolologist
   tags:
     - webdev
     - python
@@ -108,133 +102,28 @@
     - grip
     - restview
     - http
-    - lolologist
   tags:
     - webdev
     - python
-
-- name: Add the Oracle Java repo
-  become: yes
-  apt_repository: repo="ppa:webupd8team/java"
-  tags:
-    - java
-    - android
-
-- name: Accept Java license
-  become: yes
-  debconf:
-    name: oracle-java8-installer
-    question: shared/accepted-oracle-license-v1-1
-    value: 'true'
-    vtype: select
-  tags:
-    - java
-    - android
-
-- name: Install Java runtime
-  become: yes
-  apt: pkg=oracle-java8-installer state=present
-  tags:
-    - java
-    - android
-
-- name: Add Ubuntu Make repo
-  become: yes
-  apt_repository: repo="ppa:ubuntu-desktop/ubuntu-make"
-  tags:
-    - android
-
-- name: Install Android packages
-  apt: pkg={{ item }}
-  with_items:
-    - ubuntu-developer-tools-center
-    - qemu-kvm
-    - libvirt-bin
-    - ubuntu-vm-builder
-    - bridge-utils
-  tags:
-    - android
-
-- name: Make Android directories
-  file: path={{ item }} state=directory owner={{ user }}
-  with_items:
-    - /opt/android-studio
-    - /opt/android-sdk
-  tags:
-    - android
-
-- name: Install Android Studio
-  command: umake android --accept-license android-studio /opt/android-studio creates=/opt/android-studio/bin/studio.sh
-  tags:
-    - android
 
 - name: Install Node stuff
   become: yes
-  apt: pkg={{ item }}
-  with_items:
-    - nodejs
-    - nodejs-dev
-    - npm
+  pacman:
+    name:
+      - nodejs-lts-dubnium
+      - npm
   tags:
     - javascript
     - webdev
-
-- name: Install global Node packages
-  become: yes
-  npm: name={{ item }} global=yes
-  with_items:
-    - eslint
-  tags:
-    - javascript
-    - webdev
-
-- name: Install jq
-  become: yes
-  apt: pkg=jq
-  tags:
-    - python
-    - webdev
-    - javascript
-
-- name: Add the Docker signing key
-  become: yes
-  apt_key: url=https://download.docker.com/linux/ubuntu/gpg state=present
-  tags:
-    - docker
-
-- name: Add the Docker repo
-  become: yes
-  apt_repository:
-    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} edge
-    state: present
-  tags:
-    - docker
-
-- name: Add the Oracle signing key
-  become: yes
-  apt_key: url=https://www.virtualbox.org/download/{{ item }} state=present
-  with_items:
-    - oracle_vbox.asc
-    - oracle_vbox_2016.asc
-  tags:
-    - vagrant
-
-- name: Add the Oracle VBox repo
-  become: yes
-  apt_repository:
-    repo: deb http://download.virtualbox.org/virtualbox/debian {{ ansible_distribution_release }} contrib
-    state: present
-  tags:
-    - vagrant
 
 - name: Install virtualization tools
   become: yes
-  apt: name={{ item }} state=present dpkg_options=force-confdef,force-confold
-  with_items:
-    - dkms
-    - virtualbox-5.2
-    - vagrant
-    - docker-ce
+  pacman:
+    name:
+      - virtualbox
+      - virtualbox-host-dkms
+      - vagrant
+      - docker
   tags:
     - vagrant
     - docker
