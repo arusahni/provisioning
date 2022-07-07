@@ -43,7 +43,7 @@
       - acpi_call-dkms
 
 - name: Deploy zshrc
-  file: src="{{ code_dir }}/dotfiles/{{ item }}" dest="/home/{{ user }}/.{{ item }}" state=link
+  file: src="{{ code_dir }}/dotfiles/{{ item }}" dest="/home/{{ user }}/.{{ item }}" state=link force=true
   with_items:
     - zsh
     - zshrc
