@@ -27,6 +27,7 @@
       - python
       - python3
       - python-virtualenvwrapper
+      - python-pipx
   tags:
     - python
 
@@ -50,7 +51,7 @@
 
 - name: Install CSV utils
   become: no
-  pip: name={{ item }} virtualenv=/home/{{ user }}/.virtualenvs/csvkit virtualenv_python=python3
+  community.general.pipx: name={{ item }}
   with_items:
     - csvkit
     - xlsx2csv
@@ -59,48 +60,14 @@
 
 - name: Create bin directory
   file: path=/home/{{ user }}/bin state=directory
-    
-- name: Link csvkit binaries
-  become: no
-  file: src=/home/{{ user }}/.virtualenvs/csvkit/bin/{{ item }} dest=/home/{{ user }}/bin/{{ item }} state=link
-  with_items:
-    - csvclean
-    - csvcut
-    - csvformat
-    - csvgrep
-    - csvjoin
-    - csvjson
-    - csvlook
-    - csvpy
-    - csvsort
-    - csvsql
-    - csvstack
-    - csvstat
-    - in2csv
-    - runxlrd.py
-    - sql2csv
-    - xlsx2csv
-  tags:
-    - python
 
 - name: Install miscellaneous utils
   become: no
-  pip: name={{ item }} virtualenv=/home/{{ user }}/.virtualenvs/tools virtualenv_python=python3
+  community.general.pipx: name={{ item }}
   with_items:
     - grip
     - restview
     - httpie
-  tags:
-    - webdev
-    - python
-
-- name: Link miscellaneous utils
-  become: no
-  file: src=/home/{{ user }}/.virtualenvs/tools/bin/{{ item }} dest=/home/{{ user }}/bin/{{ item }} state=link
-  with_items:
-    - grip
-    - restview
-    - http
   tags:
     - webdev
     - python
