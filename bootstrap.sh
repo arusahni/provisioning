@@ -6,4 +6,5 @@ wget https://github.com/arusahni/provisioning/archive/master.tar.gz -O provision
 mkdir provisioning
 tar xvf provisioning.tar.gz -C provisioning --strip-components 1
 cd provisioning || exit
+ansible-galaxy install -r requirements.yml
 ansible-playbook --ask-become-pass "$(hostname | tr '[:upper:]' '[:lower:]')".yml

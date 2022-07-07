@@ -1,17 +1,20 @@
 ---
-- name: Install some deps
-  become: yes
-  become_user: aur_builder
-  aur:
-    name:
-      - uctags-git
-
 - name: Install deps
   become: yes
   pacman:
     name:
+      - autoconf
+      - automake
+      - pkgconf
       - xclip
       - xsel
+
+- name: Install some deps
+  become: yes
+  become_user: aur_builder
+  kewlfft.aur.aur:
+    name:
+      - uctags-git
     
 - name: Install NeoVim
   become: yes

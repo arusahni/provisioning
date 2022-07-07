@@ -58,7 +58,7 @@
 - name: Install Chrome beta
   become_user: aur_builder
   become: yes
-  aur: name=google-chrome-beta skip_installed=yes
+  kewlfft.aur.aur: name=google-chrome-beta state=present
 
 - name: Force HiDPI Chrome
   become: yes

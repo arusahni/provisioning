@@ -15,8 +15,7 @@
 
 - name: Install dev tools
   become: yes
-  become_user: aur_builder
-  aur:
+  pacman:
     name:
     - jq
     - ripgrep
