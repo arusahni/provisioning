@@ -19,7 +19,7 @@
 - name: Install NeoVim
   become: yes
   pacman: name=neovim
-  notify: install NeoVim python packages
+  notify: Install NeoVim python packages
 
 - name: Symlink Vim configuration
   file: src="{{ code_dir }}/dotfiles/vimrc" dest=/home/{{ user }}/.vimrc state=link

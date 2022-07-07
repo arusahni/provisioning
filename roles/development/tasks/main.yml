@@ -76,7 +76,7 @@
   become: yes
   pacman:
     name:
-      - nodejs-lts-dubnium
+      - nodejs-lts-gallium
       - npm
   tags:
     - javascript
@@ -102,7 +102,7 @@
   tags:
     - docker
 
-- name: Add user to group
+- name: Add user to Docker group
   become: yes
   user:
     name: "{{ user }}"

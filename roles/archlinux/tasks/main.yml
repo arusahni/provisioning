@@ -39,8 +39,8 @@
       - vlc
       - ca-certificates
       - curl
-      - exfat-utils
-      - acpi_call
+      - exfatprogs
+      - acpi_call-dkms
 
 - name: Deploy zshrc
   file: src="{{ code_dir }}/dotfiles/{{ item }}" dest="/home/{{ user }}/.{{ item }}" state=link
