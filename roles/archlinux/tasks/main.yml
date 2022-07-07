@@ -107,17 +107,3 @@
   notify: generate font cache
   tags:
     - fonts
-
-- name: Enable i915 early load
-  become: yes
-  lineinfile:
-    path: /etc/mkinitcpio.conf
-    regexp: '^MODULES='
-    line: 'MODULES=(i915)'
-
-- name: Set i915 guc to load
-  become: yes
-  lineinfile:
-    path: /etc/modprobe.d/i915.conf
-    create: yes
-    line: 'options i915 enable_guc=2'
