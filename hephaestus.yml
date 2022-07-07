@@ -1,0 +1,19 @@
+---
+# This playbook provisions Ananke
+
+- name: apply common configuration to all nodes
+  hosts: localhost
+  connection: local
+  user: aru
+  become_method: sudo
+  vars:
+    user: aru
+    code_dir: /home/aru/code
+    ssh_key_type: ed25519
+    android_dev: no
+  roles:
+    - dotfiles
+    - { role: archlinux, tags: [linux] }
+    - { role: hephaestus, tags: [hephaestus] }
+    - development
+    - vim

@@ -1,0 +1,6 @@
+---
+- name: Install ThinkPad-related packages
+  become: yes
+  pacman: pkg={{ item }}
+  with_items:
+    - tpacpi-bat
