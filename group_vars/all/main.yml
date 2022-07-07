@@ -2,3 +2,4 @@
 android_dev: yes
 hidpi: no
 hidpi_scale: 1.0
+ssh_key_type: rsa
