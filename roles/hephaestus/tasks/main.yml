@@ -4,3 +4,19 @@
   pacman: pkg={{ item }}
   with_items:
     - tpacpi-bat
+
+- name: Install work packages
+  become: yes
+  pacman: pkg={{ item }}
+  with_items:
+    - obs-studio
+
+- name: Install work packages
+  become_user: aur_builder
+  become: yes
+  kewlfft.aur.aur: name={{ item }} state=present
+  with_items:
+    - zoom
+    - v4l2ucp
+    # - vanta-agent
+    - 1password

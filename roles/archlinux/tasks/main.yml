@@ -13,6 +13,11 @@
     create: yes
     validate: 'visudo -cf %s'
 
+- name: Install yay
+  become: yes
+  become_user: aur_builder
+  kewlfft.aur.aur: name=yay state=present
+
 - name: Install base items
   become: yes
   pacman:
