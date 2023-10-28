@@ -29,4 +29,10 @@
   file: path=/home/{{ user }}/.config/nvim state=directory
 
 - name: Symlink NeoVim configuration
-  file: src="{{ code_dir }}/dotfiles/vimrc" dest=/home/{{ user }}/.config/nvim/init.vim state=link
+  file: src="{{ code_dir }}/dotfiles/nvim/{{ item }}" dest=/home/{{ user }}/.config/nvim/{{ item }} state=link
+  with_items:
+    - init.lua
+    - coc-settings.json
+    - lazy-lock.json
+    - lua
+    - after
