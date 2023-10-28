@@ -1,6 +1,6 @@
 ---
 - name: Install deps
-  become: yes
+  become: true
   pacman:
     name:
       - autoconf
@@ -10,14 +10,15 @@
       - xsel
 
 - name: Install some deps
-  become: yes
-  become_user: aur_builder
-  kewlfft.aur.aur:
+  become: true
+  pacman:
     name:
       - uctags-git
-    
+    executable: yay
+    extra_args: "--builddir /var/cache/yay"
+
 - name: Install NeoVim
-  become: yes
+  become: true
   pacman: name=neovim
   notify: Install NeoVim python packages
 

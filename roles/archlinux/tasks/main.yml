@@ -1,25 +1,33 @@
 ---
+- name: check for yay
+  stat:
+    path: /usr/bin/yay
+  register: yay_exec
+
 - name: Create AUR build user
-  become: yes
+  become: true
   user:
     name: aur_builder
     group: wheel
+  when: not yay_exec.stat.exists
 
 - name: Set AUR sudo privileges
-  become: yes
+  become: true
   lineinfile:
     path: /etc/sudoers.d/11-install-aur_builder
     line: 'aur_builder ALL=(ALL) NOPASSWD: /usr/bin/pacman'
     create: yes
     validate: 'visudo -cf %s'
+  when: not yay_exec.stat.exists
 
 - name: Install yay
-  become: yes
+  become: true
   become_user: aur_builder
   kewlfft.aur.aur: name=yay state=present
+  when: not yay_exec.stat.exists
 
 - name: Install base items
-  become: yes
+  become: true
   pacman:
     name:
       - yakuake
@@ -55,19 +63,18 @@
     - zshrc
 
 - name: Set zshell
-  become: yes
+  become: true
   user: name="{{ user }}" shell=/usr/bin/zsh
 
 - name: Deploy .dircolors
   file: src="{{ code_dir }}/dotfiles/dircolors" dest=/home/{{ user }}/.dircolors state=link
 
 - name: Install Chrome beta
-  become_user: aur_builder
-  become: yes
-  kewlfft.aur.aur: name=google-chrome-beta state=present
+  become: true
+  pacman: name=google-chrome-beta state=present executable=yay extra_args="--builddir /var/cache/yay"
 
 - name: Force HiDPI Chrome
-  become: yes
+  become: true
   lineinfile:
     dest: /usr/share/applications/google-chrome-beta.desktop
     regexp: Exec=/usr/bin/google-chrome-beta %U
@@ -80,7 +87,7 @@
   file: path=/home/{{ user }}/certs state=directory owner={{ user }} group={{ user }}
 
 - name: Install fonts
-  become: yes
+  become: true
   pacman:
     name:
       - ttf-dejavu
@@ -89,27 +96,7 @@
       - ttf-ubuntu-font-family
       - ttf-bitstream-vera
       - wqy-microhei
+      - adobe-source-code-pro-fonts
   tags:
     - fonts
 
-- name: Download Source Code Pro
-  get_url: url=https://github.com/adobe-fonts/source-code-pro/archive/2.030R-ro/1.050R-it.tar.gz dest=/tmp/
-  register: source_code_pro_result
-  tags:
-    - fonts
-
-- name: Uncompress package
-  unarchive: src="{{ source_code_pro_result['dest'] }}" dest=/tmp/
-  tags:
-    - fonts
-
-- name: Create fonts directory
-  file: path=/home/{{ user }}/.fonts state=directory
-  tags:
-    - fonts
-
-- name: Copy fonts over
-  shell: cp /tmp/source-code-pro-2.030R-ro-1.050R-it/OTF/*.otf /home/{{ user }}/.fonts/
-  notify: generate font cache
-  tags:
-    - fonts

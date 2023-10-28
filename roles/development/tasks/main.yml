@@ -1,27 +1,27 @@
 ---
 - name: Deploy gitconfig
-  become: no
+  become: true
   file: src="{{ code_dir }}/dotfiles/gitconfig" dest=/home/{{ user }}/.gitconfig state=link
 
 - name: Deploy Ack settings
-  become: no
+  become: true
   file: src="{{ code_dir }}/dotfiles/ackrc" dest=/home/{{ user }}/.ackrc state=link
 
 - name: Deploy pylintrc
-  become: no
+  become: true
   file: src="{{ code_dir }}/dotfiles/pylintrc" dest=/home/{{ user }}/.pylintrc state=link
   tags:
     - python
 
 - name: Install dev tools
-  become: yes
+  become: true
   pacman:
     name:
     - jq
     - ripgrep
 
 - name: Install base Python packages
-  become: yes
+  become: true
   pacman:
     name:
       - python
@@ -32,25 +32,25 @@
     - python
 
 - name: Create virtualenv directory
-  become: no
+  become: true
   file: path=/home/{{ user }}/.virtualenvs state=directory
   tags:
     - python
 
 - name: Deploy virtualenv postactivate config
-  become: no
+  become: true
   command: cp /home/{{ user }}/code/dotfiles/virtualenv/postactivate /home/{{ user }}/.virtualenvs/ creates=/home/{{ user }}/.virtualenvs/postactivate
   tags:
     - python
 
 - name: Deploy virtualenv postdeactivate config
-  become: no
+  become: true
   command: cp /home/{{ user }}/code/dotfiles/virtualenv/postdeactivate /home/{{ user }}/.virtualenvs/  creates=/home/{{ user }}/.virtualenvs/postdeactivate
   tags:
     - python
 
 - name: Install CSV utils
-  become: no
+  become: true
   community.general.pipx: name={{ item }}
   with_items:
     - csvkit
@@ -62,7 +62,7 @@
   file: path=/home/{{ user }}/bin state=directory
 
 - name: Install miscellaneous utils
-  become: no
+  become: true
   community.general.pipx: name={{ item }}
   with_items:
     - grip
@@ -73,7 +73,7 @@
     - python
 
 - name: Install Node stuff
-  become: yes
+  become: true
   pacman:
     name:
       - nodejs-lts-gallium
@@ -83,7 +83,7 @@
     - webdev
 
 - name: Install virtualization tools
-  become: yes
+  become: true
   pacman:
     name:
       - virtualbox
@@ -95,7 +95,7 @@
     - docker
 
 - name: Add docker group
-  become: yes
+  become: true
   group:
     name: docker
     state: present
@@ -103,7 +103,7 @@
     - docker
 
 - name: Add user to Docker group
-  become: yes
+  become: true
   user:
     name: "{{ user }}"
     append: yes
