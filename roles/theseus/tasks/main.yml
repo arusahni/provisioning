@@ -1,0 +1,14 @@
+---
+- name: Install Arch packages
+  become: true
+  pacman: pkg={{ item }}
+  with_items:
+    - obs-studio
+
+- name: Install AUR packages
+  become: true
+  pacman: name={{ item }} state=present executable=yay extra_args="--builddir /var/cache/yay"
+  with_items:
+    - zoom
+    - v4l2ucp
+    - 1password
