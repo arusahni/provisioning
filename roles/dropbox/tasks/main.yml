@@ -1,8 +1,7 @@
 ---
 - name: Install Dropbox
-  become: yes
-  become_user: aur_builder
-  aur: name=dropbox skip_installed=true
+  become: true
+  yay: name=dropbox state=present
 
 - name: Set autostart
   copy: src=dropbox.desktop dest=/home/{{ user }}/.config/autostart/

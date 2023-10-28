@@ -7,7 +7,7 @@
 
 - name: Install AUR packages
   become: true
-  pacman: name={{ item }} state=present executable=yay extra_args="--builddir /var/cache/yay"
+  yay: name={{ item }} state=present
   with_items:
     - zoom
     - v4l2ucp

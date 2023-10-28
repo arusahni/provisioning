@@ -11,11 +11,9 @@
 
 - name: Install some deps
   become: true
-  pacman:
+  yay:
     name:
       - uctags-git
-    executable: yay
-    extra_args: "--builddir /var/cache/yay"
 
 - name: Install NeoVim
   become: true

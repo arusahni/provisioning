@@ -1,5 +1,4 @@
 ---
 - name: Install Opera
-  become_user: aur_builder
-  become: yes
-  aur: name=opera-legacy skip_installed=yes
+  become: true
+  yay: name=opera
