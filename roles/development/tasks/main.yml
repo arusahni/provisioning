@@ -19,6 +19,7 @@
     name:
     - jq
     - ripgrep
+    - git-delta
 
 - name: Install base Python packages
   become: true
@@ -76,7 +77,7 @@
   become: true
   pacman:
     name:
-      - nodejs-lts-gallium
+      - nodejs-lts-hydrogen
       - npm
   tags:
     - javascript

@@ -32,7 +32,6 @@
     name:
       - yakuake
       - zsh
-      - tlp
       - smartmontools
       - ethtool
       - htop
