@@ -45,19 +45,16 @@
     - python
 
 - name: Create virtualenv directory
-  become: true
   file: path=/home/{{ user }}/.virtualenvs state=directory
   tags:
     - python
 
 - name: Deploy virtualenv postactivate config
-  become: true
   command: cp /home/{{ user }}/code/dotfiles/virtualenv/postactivate /home/{{ user }}/.virtualenvs/ creates=/home/{{ user }}/.virtualenvs/postactivate
   tags:
     - python
 
 - name: Deploy virtualenv postdeactivate config
-  become: true
   command: cp /home/{{ user }}/code/dotfiles/virtualenv/postdeactivate /home/{{ user }}/.virtualenvs/  creates=/home/{{ user }}/.virtualenvs/postdeactivate
   tags:
     - python
