@@ -60,6 +60,8 @@
       - wezterm-terminfo
       - wezterm-shell-integration
       - wireless-regdb
+      - cups
+      - system-config-printer
 
 - name: Install AUR deps
   become: true

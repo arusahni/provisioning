@@ -18,7 +18,12 @@
     - beeper-latest-bin
     - discord
     - qflipper
+    - brother-hll2350dw
 
 - name: Enable bluetooth
   become: true
   systemd: name=bluetooth.service state=started enabled=true
+
+- name: Enable CUPS
+  become: true
+  systemd: name=cups.service state=started enabled=true
