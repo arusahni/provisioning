@@ -18,3 +18,7 @@
     - beeper-latest-bin
     - discord
     - qflipper
+
+- name: Enable bluetooth
+  become: true
+  systemd: name=bluetooth.service state=started enabled=true
