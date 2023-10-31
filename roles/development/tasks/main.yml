@@ -119,3 +119,6 @@
     groups: docker
   tags:
     - docker
+
+- name: Symlink WezTerm config
+  file: src="{{ code_dir }}/dotfiles/wezterm" dest=/home/{{ user }}/.config/wezterm state=link
