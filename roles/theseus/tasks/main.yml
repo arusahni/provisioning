@@ -4,6 +4,9 @@
   pacman: pkg={{ item }}
   with_items:
     - obs-studio
+    - fprintd
+    - kdenlive
+    - plasma-browser-integration
 
 - name: Install AUR packages
   become: true
@@ -12,3 +15,6 @@
     - zoom
     - v4l2ucp
     - 1password
+    - beeper-latest-bin
+    - discord
+    - qflipper

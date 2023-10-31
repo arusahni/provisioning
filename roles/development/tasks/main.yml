@@ -17,9 +17,21 @@
   become: true
   pacman:
     name:
+    - direnv
     - jq
     - ripgrep
     - git-delta
+    - bat
+    - xh
+
+- name: Install AUR dev tools
+  become: true
+  become_user: "{{ user }}"
+  yay:
+    name:
+      - asdf-vm
+      - git-req
+    state: present
 
 - name: Install base Python packages
   become: true
@@ -68,7 +80,6 @@
   with_items:
     - grip
     - restview
-    - httpie
   tags:
     - webdev
     - python

@@ -38,6 +38,7 @@
       - ncdu
       - audacity
       - elinks
+      - fwupd
       - gimp
       - imagemagick
       - lame
@@ -54,9 +55,19 @@
       - exfatprogs
       - acpi_call-dkms
       - firefox-developer-edition
+      - speech-dispatcher
       - wezterm
       - wezterm-terminfo
       - wezterm-shell-integration
+      - wireless-regdb
+
+- name: Install AUR deps
+  become: true
+  yay:
+    name:
+      - google-chrome-beta
+      - kdocker
+    state: present
 
 - name: Deploy zshrc
   file: src="{{ code_dir }}/dotfiles/{{ item }}" dest="/home/{{ user }}/.{{ item }}" state=link force=true
@@ -70,10 +81,6 @@
 
 - name: Deploy .dircolors
   file: src="{{ code_dir }}/dotfiles/dircolors" dest=/home/{{ user }}/.dircolors state=link
-
-- name: Install Chrome beta
-  become: true
-  yay: name=google-chrome-beta state=present
 
 - name: Force HiDPI Chrome
   become: true
@@ -97,7 +104,9 @@
       - ttf-roboto
       - ttf-ubuntu-font-family
       - ttf-bitstream-vera
+      - noto-fonts-emoji
       - wqy-microhei
       - adobe-source-code-pro-fonts
+      - ttf-sourcecodepro-nerd
   tags:
     - fonts
