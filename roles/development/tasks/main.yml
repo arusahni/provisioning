@@ -37,6 +37,7 @@
   become: true
   pacman:
     name:
+      - tk
       - python
       - python3
       - python-virtualenvwrapper
