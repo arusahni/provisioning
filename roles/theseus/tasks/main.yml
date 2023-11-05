@@ -7,6 +7,7 @@
     - fprintd
     - kdenlive
     - plasma-browser-integration
+    - calibre
 
 - name: Install AUR packages
   become: true
