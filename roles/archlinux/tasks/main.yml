@@ -62,6 +62,7 @@
       - wireless-regdb
       - cups
       - system-config-printer
+      - gtk4
 
 - name: Install AUR deps
   become: true
