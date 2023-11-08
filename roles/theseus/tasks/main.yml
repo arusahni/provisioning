@@ -28,3 +28,9 @@
 - name: Enable CUPS
   become: true
   systemd: name=cups.service state=started enabled=true
+
+- name: Configure wireless regulatory domain
+  become: true
+  lineinfile:
+    path: /etc/conf.d/wireless-regdom
+    line: 'WIRELESS_REGDOM="US"'
