@@ -11,7 +11,6 @@
     repo: "git@github.com:arusahni/dotfiles.git"
     key_file: "/home/{{ user }}/.ssh/id_{{ ssh_key_type }}"
     accept_hostkey: yes
-    force: yes
     recursive: false
 
 - name: Change dotfiles owner

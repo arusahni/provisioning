@@ -10,7 +10,6 @@
     - calibre
 
 - name: Install AUR packages
-  become: true
   yay: name={{ item }} state=present
   with_items:
     - zoom
