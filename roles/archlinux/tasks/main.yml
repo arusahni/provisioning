@@ -113,3 +113,6 @@
       - ttf-sourcecodepro-nerd
   tags:
     - fonts
+
+- name: Configure Emoji
+  copy: src=fonts.conf dest=/home/{{ user }}/.config/fontconfig/fonts.conf
