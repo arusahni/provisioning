@@ -145,3 +145,10 @@
   shell: /tmp/sh.rustup.rs -y
   tags:
     - rust
+
+- name: Install internet devtools
+  become: true
+  pacman:
+    name:
+      - serverless
+      - aws-cli
