@@ -109,8 +109,12 @@
       - wqy-microhei
       - adobe-source-code-pro-fonts
       - ttf-sourcecodepro-nerd
+      - otf-commit-mono-nerd
   tags:
     - fonts
+
+- name: Make fontconfig directory
+  file: path=/home/{{ user }}/.config/fontconfig state=directory owner={{ user }} group={{ user }}
 
 - name: Configure Emoji
   copy: src=fonts.conf dest=/home/{{ user }}/.config/fontconfig/fonts.conf
