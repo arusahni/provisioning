@@ -101,15 +101,15 @@
     - webdev
     - python
 
-- name: Install Node stuff
-  become: true
-  pacman:
-    name:
-      - nodejs-lts-hydrogen
-      - npm
-  tags:
-    - javascript
-    - webdev
+# - name: Install Node stuff
+#   become: true
+#   pacman:
+#     name:
+#       - nodejs-lts-hydrogen
+#       - npm
+#   tags:
+#     - javascript
+#     - webdev
 
 - name: Install virtualization tools
   become: true
@@ -147,5 +147,4 @@
   become: true
   pacman:
     name:
-      - serverless
       - aws-cli
