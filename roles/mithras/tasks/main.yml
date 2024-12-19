@@ -1,0 +1,28 @@
+---
+- name: Install Arch packages
+  become: true
+  pacman: pkg={{ item }}
+  with_items:
+    - fprintd
+    - plasma-browser-integration
+
+- name: Install AUR packages
+  yay: name={{ item }} state=present
+  with_items:
+    - zoom
+    - 1password
+    - discord
+
+- name: Enable bluetooth
+  become: true
+  systemd: name=bluetooth.service state=started enabled=true
+
+- name: Enable CUPS
+  become: true
+  systemd: name=cups.service state=started enabled=true
+
+- name: Configure wireless regulatory domain
+  become: true
+  lineinfile:
+    path: /etc/conf.d/wireless-regdom
+    line: 'WIRELESS_REGDOM="US"'
