@@ -57,8 +57,6 @@
       - firefox-developer-edition
       - speech-dispatcher
       - wezterm
-      - wezterm-terminfo
-      - wezterm-shell-integration
       - wireless-regdb
       - cups
       - system-config-printer

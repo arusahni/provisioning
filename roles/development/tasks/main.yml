@@ -41,6 +41,7 @@
       - python
       - python3
       - python-virtualenvwrapper
+      - python-pip
       - python-pipx
       - python-poetry
   tags:
