@@ -3,6 +3,10 @@
   become: true
   file: src="{{ code_dir }}/dotfiles/gitconfig" dest=/home/{{ user }}/.gitconfig state=link
 
+- name: Deploy gitignore
+  become: true
+  file: src="{{ code_dir }}/dotfiles/gitignore_global" dest=/home/{{ user }}/.gitignore_global state=link
+
 - name: Deploy Ack settings
   become: true
   file: src="{{ code_dir }}/dotfiles/ackrc" dest=/home/{{ user }}/.ackrc state=link
