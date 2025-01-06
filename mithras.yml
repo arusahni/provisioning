@@ -13,6 +13,6 @@
   roles:
     - dotfiles
     - { role: archlinux, tags: [linux] }
-    - mithras
-    - development
-    - vim
+    - { role: mithras, tags: [mithras] }
+    - { role: development, tags: [development] }
+    - { role: vim, tags: [vim] }
