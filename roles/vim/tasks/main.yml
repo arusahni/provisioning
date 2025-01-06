@@ -6,10 +6,15 @@
       - autoconf
       - automake
       - pkgconf
+      - luarocks
+      - python-pynvim
+      # Needed for clipboard access on X11 systems
       - xclip
       - xsel
+      # Needed for clipboard access on Wayland systems
+      - wl-clipboard
 
-- name: Install some deps
+- name: Install 3rd party deps
   become: true
   yay:
     name:

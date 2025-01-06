@@ -27,6 +27,7 @@
     - git-delta
     - bat
     - xh
+    - pgcli
 
 - name: Install AUR dev tools
   become: true
@@ -123,6 +124,7 @@
       - virtualbox-host-dkms
       - vagrant
       - docker
+      - docker-compose
   tags:
     - vagrant
     - docker
